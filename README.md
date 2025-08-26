@@ -38,6 +38,23 @@
       color:#caffd9;text-decoration:none;cursor:pointer;background:#0e1a14
     }
     .btn:hover{filter:brightness(1.2)}
+
+    /* Progress bar */
+    .progress {
+      width: 100%; 
+      height: 14px; 
+      background:#122018; 
+      border:1px solid #1b5c3a; 
+      border-radius:6px; 
+      margin:6px 0;
+      overflow:hidden;
+    }
+    .progress .bar {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#3aff91,#9fe0b3);
+      transition:width 0.3s;
+    }
   </style>
 </head>
 <body>
@@ -80,7 +97,7 @@
       draw();
     })();
 
-    // Simulated console output
+    // Console output simulation
     const screen = document.getElementById('screen');
 
     const lines = [
@@ -92,20 +109,15 @@
       ['▶ Loading threat intel feeds…', 'muted', 500],
       ['feeds: 12 sources, 48,213 indicators', 'ok', 220],
 
-      // 👇 الزيادة: تحميل package
+      // تحميل Package
       ['▶ Downloading incident-response.pkg (24MB)…', 'muted', 500],
-      ['⬇️ [=====         ] 25%  (6.1MB/24MB)', 'ok', 300],
-      ['⬇️ [==========    ] 50%  (12MB/24MB)', 'ok', 400],
-      ['⬇️ [===============] 75%  (18MB/24MB)', 'ok', 500],
-      ['⬇️ [====================] 100%  (24MB/24MB)', 'ok', 300],
-      ['download complete — verifying signature', 'muted', 400],
+      ['__PROGRESS__', 'progress', 0],
+      ['download complete — verifying signature', 'muted', 500],
       ['signature: valid (SHA256)', 'ok', 300],
 
-      // 👇 الزيادة: سحب البيانات
+      // سحب البيانات
       ['▶ Fetching live telemetry data…', 'muted', 500],
-      ['stream: 1,204 events received', 'ok', 250],
-      ['stream: 4,897 events received', 'ok', 250],
-      ['stream: 10,532 events received', 'ok', 350],
+      ['__PROGRESS__', 'progress', 0],
       ['stream: complete — 12,408 records ingested', 'ok', 400],
 
       ['▶ Correlating events…', 'muted', 450],
@@ -124,6 +136,27 @@
     ];
 
     function append(text, cls='muted'){
+      // Progress bar special case
+      if (cls === 'progress' && text === '__PROGRESS__'){
+        const wrap = document.createElement('div');
+        wrap.className = 'progress';
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        wrap.appendChild(bar);
+        screen.appendChild(wrap);
+        screen.scrollTop = screen.scrollHeight;
+
+        // animate bar
+        let p = 0;
+        const timer = setInterval(()=>{
+          p += Math.floor(Math.random()*15)+5; 
+          if(p >= 100){ p=100; clearInterval(timer); }
+          bar.style.width = p+"%";
+        }, 400);
+        return;
+      }
+
+      // Normal line
       const div = document.createElement('div');
       div.className = 'line '+cls;
       div.textContent = text;

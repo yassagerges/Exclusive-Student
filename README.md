@@ -27,9 +27,7 @@
     .ok{color:#88ffb3}
     .blink{animation:blink 1s steps(1,end) infinite}
     @keyframes blink{50%{opacity:.2}}
-    /* matrix rain */
     canvas#rain{position:absolute;inset:0;opacity:.08;pointer-events:none}
-    /* reveal banner */
     .reveal{
       position:absolute;inset:auto 14px 14px 14px;background:#08110c; border:1px solid #1b5c3a;
       padding:12px;border-radius:10px;color:#b8ffd1;display:none
@@ -51,7 +49,6 @@
     </div>
     <div class="screen" id="screen" aria-live="polite"></div>
 
-    <!-- يظهر بعد ~12 ثانية عشان يوضح إنها محاكاة -->
     <div class="reveal" id="reveal">
       <div><strong>Relax 😄 — This is a safe demo/prank.</strong> No data was collected; everything above is simulated UI to show off cybersecurity vibes.</div>
       <a class="btn" href="#" onclick="this.parentElement.style.display='none';return false;">Hide</a>
@@ -94,6 +91,23 @@
       ['wlan0 192.168.1.7/24 ▶ link up', 'ok', 120],
       ['▶ Loading threat intel feeds…', 'muted', 500],
       ['feeds: 12 sources, 48,213 indicators', 'ok', 220],
+
+      // 👇 الزيادة: تحميل package
+      ['▶ Downloading incident-response.pkg (24MB)…', 'muted', 500],
+      ['⬇️ [=====         ] 25%  (6.1MB/24MB)', 'ok', 300],
+      ['⬇️ [==========    ] 50%  (12MB/24MB)', 'ok', 400],
+      ['⬇️ [===============] 75%  (18MB/24MB)', 'ok', 500],
+      ['⬇️ [====================] 100%  (24MB/24MB)', 'ok', 300],
+      ['download complete — verifying signature', 'muted', 400],
+      ['signature: valid (SHA256)', 'ok', 300],
+
+      // 👇 الزيادة: سحب البيانات
+      ['▶ Fetching live telemetry data…', 'muted', 500],
+      ['stream: 1,204 events received', 'ok', 250],
+      ['stream: 4,897 events received', 'ok', 250],
+      ['stream: 10,532 events received', 'ok', 350],
+      ['stream: complete — 12,408 records ingested', 'ok', 400],
+
       ['▶ Correlating events…', 'muted', 450],
       ['ALERT  T1059.003 suspicious command execution', 'warn', 250],
       ['ALERT  T1021 lateral movement attempt', 'warn', 250],
@@ -122,11 +136,9 @@
         append(txt, cls);
         await new Promise(r=>setTimeout(r, wait));
       }
-      // auto show reveal after 12s total (safety/ethics)
       setTimeout(()=>document.getElementById('reveal').style.display='block', 1200);
     })();
 
-    // Optional: key press acknowledgement
     addEventListener('keydown', ()=> {
       const acks = document.querySelectorAll('.blink');
       acks.forEach(e => e.classList.remove('blink'));
